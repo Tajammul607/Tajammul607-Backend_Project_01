@@ -2,6 +2,8 @@
 import dotenv from 'dotenv'
 
 import Db_connect from './db_connect/DB_index.js';
+import { append } from 'vary';
+import { app } from './app.js';
 
 dotenv.config(
     {
@@ -11,7 +13,20 @@ dotenv.config(
 
 //middleware,controllers,routes,models,utils
 
-Db_connect
+Db_connect()
+.then(()=>{
+  app.listen(process.env.PORT || 8000,
+    console.log(`Server is listening on ${process.env.PORT}`));
+
+    app.on("ERROR",(err)=>{
+      console.log(`Mongo db connection failed ${err}`);
+      throw err;
+    })
+}
+)
+.catch((error)=>{
+   console.log(`Mongo db connection failed !!! ${error}`)
+})
 
 
 
